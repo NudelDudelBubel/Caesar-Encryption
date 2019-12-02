@@ -4,18 +4,18 @@
 
 
 #define ENCRYTABLE 'A'
-#define KEY 51
+#define KEY 1
 
 int main(void)
 {
     printf("Encrypt char - %c \n", ENCRYTABLE);
 
     char caesar = encryptCharOnlyBig(ENCRYTABLE, KEY);
-    printf("Encrypted char %c to %c \n", ENCRYTABLE, caesar);
-    printf("Decrypted char %c to %c \n", caesar, decryptCharOnlyBig(caesar, KEY));
+    printf("Encrypted char - %c to %c \n", ENCRYTABLE, caesar);
+    printf("Decrypted char - %c to %c \n", caesar, decryptCharOnlyBig(caesar, KEY));
 
-    printf("Encrycpt Big and small - %c to %c \n", 'Z', encryptCharBigAndSmall('Z', KEY));
-    printf("Decrycpt Big and small - %c to %c \n", 'z', decryptCharBigAndSmall('z', KEY));
+    printf("Encrycpt Big and small - %c to %c \n", 'z', encryptCharBigAndSmall('z', KEY));
+    printf("Decrycpt Big and small - %c to %c \n", 'A', decryptCharBigAndSmall('A', KEY));
 
     return 0;
 }
@@ -32,33 +32,50 @@ char decryptChar(char dChar, short key)
 
 char encryptCharBigAndSmall(char eChar, short key)
 {
-    eChar -= 'A';
-    short caesar = (eChar + key) % 52;
+    short tKey = key % 52;
 
-    if(caesar > 26)
+    if(tKey == 0)
+    {
+        ++tKey;
+    }
+
+    short caesar = eChar + tKey;
+
+    if(caesar > 'z')
+    {
+        caesar -= 58;
+    }
+
+    if(caesar > 'Z')
     {
         caesar += 6;
     }
 
-    return caesar + 'A';
-
+    return caesar;
 }
 
 char decryptCharBigAndSmall(char dChar, short key)
 {
-    key %= 52;
+    short tKey = key % 52;
 
-    short t = short(dChar - key - 6);
+    if(tKey == 0)
+    {
+        ++tKey;
+    }
 
-    if((t >= 65 && t <= 90) || (t >= 97 && t <= 122))
+    short caesar = dChar - tKey;
+
+    if(caesar < 'A')
     {
-        return t;
+        caesar += 58;
     }
-    else if(t > 90 && t < 97)
+
+    if(caesar < 'a')
     {
-        t -= 6;
+        caesar -= 6;
     }
-    return t;
+
+    return caesar;
 }
 
 char encryptCharOnlyBig(char eChar, short key)
@@ -71,6 +88,11 @@ char encryptCharOnlyBig(char eChar, short key)
     if(tester >= 65 && tester <= 90)
     {
         return eChar + key;
+    }
+
+    if(tester > 90)
+    {
+        return eChar + key - 26;
     }
 
     return eChar;
@@ -86,6 +108,11 @@ char decryptCharOnlyBig(char dChar, short key)
     if(tester >= 65 && tester <= 90)
     {
         return dChar - key;
+    }
+
+    if(tester < 65)
+    {
+        return dChar - key + 26;
     }
 
     return dChar;
