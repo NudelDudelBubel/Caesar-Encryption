@@ -62,17 +62,16 @@ char decryptCharBigAndSmall(char dChar, short key)
 
 char encryptCharOnlyBig(char eChar, short key)
 {
-    //Aplhabet größe
+    // Alphabet size
     key %= 26;
     short tester = short(eChar + key);
 
-    //65 ist A in ASCII Tabelle  90 ist Z in ASCII Tabelle
-    if(tester >= 65 && tester <= 90)
+    if(tester >= 'A' && tester <= 'Z')
     {
         eChar += key;
     }
 
-    if(tester > 90)
+    if(tester > 'Z')
     {
         eChar = eChar + key - 26;
     }
@@ -82,17 +81,16 @@ char encryptCharOnlyBig(char eChar, short key)
 
 char decryptCharOnlyBig(char dChar, short key)
 {
-    //Aplhabet größe
+    // Alphabet size
     key %= 26;
     short tester = short(dChar - key);
 
-    //65 ist A in ASCII Tabelle  90 ist Z in ASCII Tabelle
-    if(tester >= 65 && tester <= 90)
+    if(tester >= 'A' && tester <= 'Z')
     {
         dChar -= key;
     }
 
-    if(tester < 65)
+    if(tester < 'Z')
     {
         dChar = dChar - key + 26;
     }
