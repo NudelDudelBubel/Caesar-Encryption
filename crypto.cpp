@@ -2,7 +2,7 @@
 
 /*
  *
- * All functions require correct values in order to save reducing code
+ * All functions require correct values to prevent redundant code
  *
  * Encrypt/Decrypt-Char reqires any character
  * Encrypt/Decrypt-CharBigAndSmall requires BIG and SMALL-Latin letters
@@ -90,7 +90,7 @@ char decryptCharOnlyBig(char dChar, short key)
         dChar -= key;
     }
 
-    if(tester < 'Z')
+    if(tester < 'A')
     {
         dChar = dChar - key + 26;
     }
