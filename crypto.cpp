@@ -24,6 +24,7 @@ char decryptChar(char dChar, short key)
 
 char encryptCharBigAndSmall(char eChar, short key)
 {
+    // Alphabet size all letters
     short tKey = key % 52;
 
     short caesar = eChar + tKey;
@@ -43,6 +44,7 @@ char encryptCharBigAndSmall(char eChar, short key)
 
 char decryptCharBigAndSmall(char dChar, short key)
 {
+    // Alphabet size all letters
     short tKey = key % 52;
 
     short caesar = dChar - tKey;

@@ -1,14 +1,10 @@
 #include <stdio.h>
-#include <iostream>
-#include <string>
-#include <cstring>
 
 #include "caesar.h"
 
-using namespace std;
-
 #define ENCRYTABLE 'A'
 #define KEY 103
+#define MAX_CHARACTERS 256
 
 int main(void)
 {
@@ -28,26 +24,34 @@ int main(void)
 
     printf("\n \n \n");
 
+    //startCPPMode();
+    startCMode();
+}
+
+void startCMode()
+{
     bool work = true;
-    while(work)
+    do
     {
+        printf("Select one of the following options: \n");
+        printf("1 - Encrypt \n");
+        printf("2 - Decrypt \n");
+        printf("* - Exit \n");
+
         char cryptMode;
-        cout << "Select one of the following options: \n"
-                "1 - Encrypt \n"
-                "2 - Decrypt \n"
-                "* - Exit \n" << endl;
-        cin >> cryptMode;
+        scanf(" %c", &cryptMode);
+        printf("\n");
 
         switch(cryptMode)
         {
             case '1':
             {
-                chooseEncryptMode();
+                encryptMode(cryptMode, chooseInput());
                 break;
             }
             case '2':
             {
-                chooseDecryptMode();
+                decryptMode(cryptMode, chooseInput());
                 break;
             }
             default:
@@ -57,80 +61,84 @@ int main(void)
             }
         }
     }
+    while(work);
 }
 
-void chooseEncryptMode()
+void encryptMode(char cryptMode, char inputMode)
 {
-    char encryptMode;
-    cout << "Select one encrypt option: \n"
-            "1 - Only big Latin letter \n"
-            "2 - Big or small Latin letter \n"
-            "3 - Any character \n"
-            "* - Back \n" << endl;
-    cin >> encryptMode;
+    char crypt[MAX_CHARACTERS];
+    char* cryptP;
 
-    if(encryptMode != '1' && encryptMode != '2' && encryptMode != '3')
+    for(int i = 0; i < MAX_CHARACTERS; ++i)
     {
-        return;
+        crypt[i] = NULL;
     }
 
-    cout << "Enter line to encrypt:" << endl;
-    string tmp;
-    cin.ignore();
-    getline(cin, tmp);
-
-    int length = tmp.length();
-    char line[length];
-    strcpy(line, tmp.c_str());
-
-    for(char x : line)
+    switch(inputMode)
     {
-        if(!checkCharacter(encryptMode, x))
+        case '1':
         {
-            cout << "Cannot encrypt char < " << x << " > with choosen mode! \n" << endl;
-            encryptMode = 'x';
+            cryptP = readFromConsole(crypt, cryptMode);
+            break;
+        }
+        case '2':
+        {
+            break;
+        }
+        default:
+        {
             return;
         }
     }
 
-    int key = inputKey();
-
-    encrypt(encryptMode, line, key, length);
+    encrypt(cryptP, chooseCaesarMode(cryptMode), cryptMode);
 }
 
-void encrypt(char encryptMode, char *line, int key, int length)
+void encrypt(char* ecrypt, char caesarMode, char cryptMode)
 {
-    char tmp[length];
+    char tc;
+    int tmpSize = -1;
+    do
+    {
+        ++tmpSize;
+        tc = ecrypt[tmpSize];
+    }
+    while(tc != NULL);
 
-    for(int i = 0; i < length; ++i)
+    char tmp[tmpSize];
+
+    for(int i = 0; i < tmpSize; ++i)
     {
         tmp[i] = ' ';
-        
-        char crypt = line[i];
+    }
 
-        if(crypt == ' ')
+    short key = newInputKey(cryptMode);
+
+    for(int i = 0; i < tmpSize; ++i)
+    {
+        char tmpC = ecrypt[i];
+
+        if(tmpC == ' ' || !checkCharacter(caesarMode, tmpC))
         {
+            tmp[i] = tmpC;
             continue;
         }
 
-        switch(encryptMode)
+        switch(caesarMode)
         {
             case '1':
             {
-                tmp[i] = encryptCharOnlyBig(crypt, key);
-                printf("Encrypted %c to %c with key %d \n", crypt, tmp[i] , key);
+                tmp[i] = encryptCharOnlyBig(tmpC, key);
                 break;
             }
             case '2':
             {
-                tmp[i] = encryptCharBigAndSmall(crypt, key);
-                printf("Encrypted %c to %c with key %d \n", crypt, tmp[i], key);
+                tmp[i] = encryptCharBigAndSmall(tmpC, key);
                 break;
             }
             case '3':
             {
-                tmp[i] = encryptChar(crypt, key);
-                printf("Encrypted %c to %c with key %d \n", crypt, tmp[i], key);
+                tmp[i] = encryptChar(tmpC, key);
                 break;
             }
             default:
@@ -138,88 +146,93 @@ void encrypt(char encryptMode, char *line, int key, int length)
                 break;
             }
         }
+
+        printf("Encrypted %c to %c with key %d\n", tmpC, tmp[i], key);
     }
 
-    printf("\nFully encrypted : \n");
-    for(int i = 0; i < length; ++i)
+    printf("Complete encrypted:\n");
+    for(char c : tmp)
     {
-        printf("%c", tmp[i]);
+        printf("%c", c);
     }
     printf("\n\n\n");
 }
 
-void chooseDecryptMode()
+void decryptMode(char cryptMode, char inputMode)
 {
-    char decryptMode;
-    cout << "Select one decrypt option: \n"
-            "1 - Only big Latin letter \n"
-            "2 - Big or small Latin letter \n"
-            "3 - Any character \n"
-            "* - Back \n" << endl;
-    cin >> decryptMode;
+    char crypt[MAX_CHARACTERS];
+    char* cryptP;
 
-    if(decryptMode != '1' && decryptMode != '2' && decryptMode != '3')
+    for(int i = 0; i < MAX_CHARACTERS; ++i)
     {
-        return;
+        crypt[i] = NULL;
     }
 
-    cout << "Enter line to decrypt:" << endl;
-    string tmp;
-    cin.ignore();
-    getline(cin, tmp);
-
-    int length = tmp.length();
-    char line[length];
-    strcpy(line, tmp.c_str());
-
-    for(char x : line)
+    switch(inputMode)
     {
-        if(!checkCharacter(decryptMode, x))
+        case '1':
         {
-            cout << "Cannot decrypt char < " << x << " > with choosen mode!" << endl;
-            decryptMode = 'x';
+            cryptP = readFromConsole(crypt, cryptMode);
+            break;
+        }
+        case '2':
+        {
+            break;
+        }
+        default:
+        {
             return;
         }
     }
 
-    int key = inputKey();
-
-    decrypt(decryptMode, line, key, length);
+    decrypt(cryptP, chooseCaesarMode(cryptMode), cryptMode);
 }
 
-void decrypt(int decryptMode, char* line, int key, int length)
+void decrypt(char* dcrypt, char caesarMode, char cryptMode)
 {
-    char tmp[length];
+    char tc;
+    int tmpSize = -1;
+    do
+    {
+        ++tmpSize;
+        tc = dcrypt[tmpSize];
+    }
+    while(tc != NULL);
 
-    for(int i = 0; i < length; ++i)
+    char tmp[tmpSize];
+
+    for(int i = 0; i < tmpSize; ++i)
     {
         tmp[i] = ' ';
-        
-        char crypt = line[i];
+    }
 
-        if(crypt == ' ')
+    short key = newInputKey(cryptMode);
+
+    for(int i = 0; i < tmpSize; ++i)
+    {
+        char tmpC = dcrypt[i];
+
+        if(tmpC == ' ' || !checkCharacter(caesarMode, tmpC))
         {
+            tmp[i] = tmpC;
             continue;
         }
 
-        switch(decryptMode)
+        switch(caesarMode)
         {
             case '1':
             {
-                tmp[i] = decryptCharOnlyBig(crypt, key);
-                printf("Decrypted %c to %c with key %d \n", crypt, tmp[i], key);
+                tmp[i] = decryptCharOnlyBig(tmpC, key);
                 break;
             }
             case '2':
             {
-                tmp[i] = decryptCharBigAndSmall(crypt, key);
-                printf("Decrypted %c to %c with key %d \n", crypt, tmp[i], key);
+                tmp[i] = decryptCharBigAndSmall(tmpC, key);
                 break;
             }
             case '3':
             {
-                tmp[i] = decryptChar(crypt, key);
-                printf("Decrypted %c to %c with key %d \n", crypt, tmp[i], key);
+                tmp[i] = decryptChar(tmpC, key);
                 break;
             }
             default:
@@ -227,13 +240,69 @@ void decrypt(int decryptMode, char* line, int key, int length)
                 break;
             }
         }
+
+        printf("Decrypted %c to %c with key %d\n", tmpC, tmp[i], key);
     }
-    printf("\nFully decrypted : \n");
-    for(int i = 0; i < length; ++i)
+
+    printf("Complete decrypted:\n");
+    for(char c : tmp)
     {
-        printf("%c", tmp[i]);
+        printf("%c", c);
     }
     printf("\n\n\n");
+}
+
+char chooseInput()
+{
+    printf("Choose input mode:\n");
+    printf("1 - Console\n");
+    printf("2 - File\n");
+    printf("* - Back\n");
+
+    char input;
+    char t;
+    scanf(" %c%c", &input, &t);
+    printf("\n");
+
+    return input;
+}
+
+char* readFromConsole(char* crypt, char cryptMode)
+{
+    printf("Enter line to %s:\n", cryptMode == '1' ? "encrypt" : "decrypt");
+
+    // regex - regular expression
+    scanf("%[^'\n']", crypt);
+
+    printf("\n");
+
+    return crypt;
+}
+
+char chooseCaesarMode(char cryptMode)
+{
+    printf("Choose one of the following modes to %s:\n", cryptMode == '1' ? "encrypt" : "decrypt");
+    printf("1 - Capital letters\n");
+    printf("2 - All letters\n");
+    printf("3 - Everything\n");
+    printf("* - Back\n");
+
+    char mode;
+    scanf(" %s", &mode);
+    printf("\n");
+
+    return mode;
+}
+
+int newInputKey(char cryptMode)
+{
+    printf("Enter key for %sion:\n", cryptMode == '1' ? "encrypt" : "decrypt");
+
+    int key = 0;
+    scanf(" %i", &key);
+    printf("\n");
+
+    return key;
 }
 
 bool checkCharacter(char mode, char character)
@@ -243,7 +312,7 @@ bool checkCharacter(char mode, char character)
         return true;
     }
 
-    if(mode == '1' && (character >= 'A' && character <= 'Z')) // Only big
+    if(mode == '1' && (character >= 'A' && character <= 'Z')) // Only capital letters
     {
         return true;
     }
@@ -257,13 +326,4 @@ bool checkCharacter(char mode, char character)
     }
 
     return false;
-}
-
-int inputKey()
-{
-    int key;
-    cout << "Enter caesar key:" << endl;
-    cin >> key;
-
-    return key;
 }
