@@ -119,7 +119,7 @@ void encrypt(char* ecrypt, char caesarMode, char cryptMode)
     {
         char tmpC = ecrypt[i];
 
-        if(tmpC == ' ' || !checkCharacter(caesarMode, tmpC))
+        if(caesarMode != '3' && (tmpC == ' ' || !checkCharacter(caesarMode, tmpC)))
         {
             tmp[i] = tmpC;
             continue;
@@ -219,7 +219,7 @@ void decrypt(char* dcrypt, char caesarMode, char cryptMode)
     {
         char tmpC = dcrypt[i];
 
-        if(tmpC == ' ' || !checkCharacter(caesarMode, tmpC))
+        if(caesarMode != '3' && (tmpC == ' ' || !checkCharacter(caesarMode, tmpC)))
         {
             tmp[i] = tmpC;
             continue;
@@ -315,7 +315,7 @@ int newInputKey(char cryptMode)
     int key = 0;
     while(scanf("%d", &key) != 1)
     {
-        printf("Enter (digit) key for %s:", cryptMode == '1' ? "encryption" : "decryption");
+        printf("Enter (digit) key for %s: ", cryptMode == '1' ? "encryption" : "decryption");
         while(getchar() != '\n');
     }
 
@@ -328,11 +328,6 @@ int newInputKey(char cryptMode)
 
 bool checkCharacter(char mode, char character)
 {
-    if(character == ' ')
-    {
-        return true;
-    }
-
     if(mode == '1' && (character >= 'A' && character <= 'Z')) // Only capital letters
     {
         return true;
