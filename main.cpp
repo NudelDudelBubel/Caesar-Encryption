@@ -39,7 +39,8 @@ void startCMode()
         printf("* - Exit \n");
 
         char cryptMode;
-        scanf(" %c", &cryptMode);
+        scanf("%c", &cryptMode);
+        clearBuffer();
         printf("\n");
 
         switch(cryptMode)
@@ -150,7 +151,13 @@ void encrypt(char* ecrypt, char caesarMode, char cryptMode)
         printf("Encrypted %c to %c with key %d\n", tmpC, tmp[i], key);
     }
 
-    printf("Complete encrypted:\n");
+    printf("\nComplete encrypted:\n");
+
+    for(int i = 0; i < tmpSize; ++i)
+    {
+        printf("%c", ecrypt[i]);
+    }
+    printf("\n--- TO ---\n\n");
     for(char c : tmp)
     {
         printf("%c", c);
@@ -244,7 +251,13 @@ void decrypt(char* dcrypt, char caesarMode, char cryptMode)
         printf("Decrypted %c to %c with key %d\n", tmpC, tmp[i], key);
     }
 
-    printf("Complete decrypted:\n");
+    printf("\nComplete decrypted:\n");
+
+    for(int i = 0; i < tmpSize; ++i)
+    {
+        printf("%c", dcrypt[i]);
+    }
+    printf("\n--- TO ---\n\n");
     for(char c : tmp)
     {
         printf("%c", c);
@@ -260,8 +273,8 @@ char chooseInput()
     printf("* - Back\n");
 
     char input;
-    char t;
-    scanf(" %c%c", &input, &t);
+    scanf("%c", &input);
+    clearBuffer();
     printf("\n");
 
     return input;
@@ -273,7 +286,7 @@ char* readFromConsole(char* crypt, char cryptMode)
 
     // regex - regular expression
     scanf("%[^'\n']", crypt);
-
+    clearBuffer();
     printf("\n");
 
     return crypt;
@@ -288,7 +301,8 @@ char chooseCaesarMode(char cryptMode)
     printf("* - Back\n");
 
     char mode;
-    scanf(" %s", &mode);
+    scanf("%s", &mode);
+    clearBuffer();
     printf("\n");
 
     return mode;
@@ -296,10 +310,17 @@ char chooseCaesarMode(char cryptMode)
 
 int newInputKey(char cryptMode)
 {
-    printf("Enter key for %sion:\n", cryptMode == '1' ? "encrypt" : "decrypt");
+    printf("Enter (digit) key for %s: ", cryptMode == '1' ? "encryption" : "decryption");
 
     int key = 0;
-    scanf(" %i", &key);
+    while(scanf("%d", &key) != 1)
+    {
+        printf("Enter (digit) key for %s:", cryptMode == '1' ? "encryption" : "decryption");
+        while(getchar() != '\n');
+    }
+
+
+    clearBuffer();
     printf("\n");
 
     return key;
@@ -326,4 +347,10 @@ bool checkCharacter(char mode, char character)
     }
 
     return false;
+}
+
+void clearBuffer()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { }
 }

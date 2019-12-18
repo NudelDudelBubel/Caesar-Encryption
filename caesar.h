@@ -12,6 +12,7 @@ char* readFromConsole(char* crypt, char cryptMode);
 char chooseCaesarMode(char cryptMode);
 int newInputKey(char cryptMode);
 bool checkCharacter(char mode, char character);
+void clearBuffer();
 
 // crypto
 char encryptChar(char eChar, short key);
