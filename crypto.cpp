@@ -12,6 +12,20 @@
  *
  * */
 
+char* encryptAllWithKeyInArray(char* ary, int size)
+{
+    size += size;
+
+    return ary;
+}
+
+char* decryptAllWithKeyInArray(char* ary, int size)
+{
+    size += size;
+
+    return ary;
+}
+
 char encryptChar(char eChar, short key)
 {
     return eChar + key;

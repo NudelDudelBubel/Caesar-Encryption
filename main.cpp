@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "caesar.h"
 
@@ -84,6 +85,8 @@ void encryptMode(char cryptMode, char inputMode)
         }
         case '2':
         {
+            cryptP = readFromFile(crypt, cryptMode);
+            printf(crypt);
             break;
         }
         default:
@@ -157,7 +160,7 @@ void encrypt(char* ecrypt, char caesarMode, char cryptMode)
     {
         printf("%c", ecrypt[i]);
     }
-    printf("\n--- TO ---\n\n");
+    printf("\n\n---\n\n");
     for(char c : tmp)
     {
         printf("%c", c);
@@ -184,6 +187,7 @@ void decryptMode(char cryptMode, char inputMode)
         }
         case '2':
         {
+            cryptP = readFromFile(crypt, cryptMode);
             break;
         }
         default:
@@ -288,6 +292,32 @@ char* readFromConsole(char* crypt, char cryptMode)
     scanf("%[^'\n']", crypt);
     clearBuffer();
     printf("\n");
+
+    return crypt;
+}
+
+char* readFromFile(char* crypt, char cryptMode)
+{
+    printf("Enter File-Path to %s:\n", cryptMode == '1' ? "encrypt" : "decrypt");
+
+    //clearBuffer();
+
+    char filename[MAX_CHARACTERS];
+    scanf("%s", filename);
+    printf("Read file - %s\n", filename);
+
+    FILE *fp;
+    char str[MAX_CHARACTERS];
+
+    fp = fopen(filename, "rb");
+    if (fp == NULL)
+    {
+        printf("Could not open file %s\n", filename);
+    }
+    while (fgets(str, MAX_CHARACTERS, fp) != NULL)
+        printf("%s", str);
+    crypt = str;
+    fclose(fp);
 
     return crypt;
 }
